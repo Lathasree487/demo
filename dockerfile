@@ -11,4 +11,7 @@ WORKDIR /app
 EXPOSE 3000
 
 # Start with bash by default
+# this is github project
 CMD [ "sh" ]
+
+
