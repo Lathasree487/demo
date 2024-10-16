@@ -1,8 +1,8 @@
-# Use an official Node.js image as a base (if using Node.js for example)
-FROM node:14
+# Use a smaller Node.js base image (Alpine version)
+FROM node:14-alpine
 
 # Install Git inside the container
-RUN apt-get update && apt-get install -y git
+RUN apk update && apk add git
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -11,4 +11,4 @@ WORKDIR /app
 EXPOSE 3000
 
 # Start with bash by default
-CMD [ "bash" ]
+CMD [ "sh" ]
