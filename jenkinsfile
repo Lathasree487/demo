@@ -1,0 +1,22 @@
+pipeline {
+    environment {
+        DB_IP = '192.168.1.100'        // Replace with your actual DB IP
+        DB_USER = 'admin'              // Replace with your actual DB user
+        DB_PASSWORD = 'password123'    // Replace with your actual DB password
+    }
+    agent any
+    stages {
+        stage('Print DB IP') {
+            steps {
+                echo "Database IP: ${DB_IP}"
+            }
+        }
+        stage('Print DB User and Password') {
+            steps {
+                echo "Database User: ${DB_USER}"
+                // Not recommended to directly display passwords in real-world cases!
+                echo "Database Password: ${DB_PASSWORD}"
+            }
+        }
+    }
+}
