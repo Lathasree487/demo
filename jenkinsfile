@@ -3,6 +3,7 @@ pipeline {
         DB_IP = '192.168.1.100'        // Replace with your actual DB IP
         DB_USER = 'admin'              // Replace with your actual DB user
         DB_PASSWORD = 'password123'    // Replace with your actual DB password
+        SERVER_CREDS = credentials('ec2-user')
     }
     agent any
     stages {
@@ -16,6 +17,19 @@ pipeline {
                 echo "Database User: ${DB_USER}"
                 // Not recommended to directly display passwords in real-world cases!
                 echo "Database Password: ${DB_PASSWORD}"
+            }
+        }
+        stage('setup') {
+            steps {
+                echo "My creds : ${SERVER_CREDS}"
+                echo "username : ${SERVER_CREDS_usr}"
+                echo "password : ${SERVER_CREDS_psw}"
+            }
+
+        }
+        stage('Test') {
+            steps {
+                echo "this is test stage"
             }
         }
     }
