@@ -3,7 +3,7 @@ pipeline {
         DB_IP = '192.168.1.100'        // Replace with your actual DB IP
         DB_USER = 'admin'              // Replace with your actual DB user
         DB_PASSWORD = 'password123'    // Replace with your actual DB password
-        SERVER_CREDS = credentials('ec2-user')
+        SERVER_CREDS = credentials('ubuntu')
     }
     agent any
     stages {
