@@ -1,36 +1,121 @@
 pipeline {
-    environment {
-        DB_IP = '192.168.1.100'        // Replace with your actual DB IP
-        DB_USER = 'admin'              // Replace with your actual DB user
-        DB_PASSWORD = 'password123'    // Replace with your actual DB password
-        SERVER_CREDS = credentials('ec2-user')
-    }
     agent any
-    stages {
-        stage('Print DB IP') {
-            steps {
-                echo "Database IP: ${DB_IP}"
-            }
-        }
-        stage('Print DB User and Password') {
-            steps {
-                echo "Database User: ${DB_USER}"
-                // Not recommended to directly display passwords in real-world cases!
-                echo "Database Password: ${DB_PASSWORD}"
-            }
-        }
-        stage('setup') {
-            steps {
-                echo "My creds : ${SERVER_CREDS}"
-                echo "username : ${SERVER_CREDS_usr}"
-                echo "password : ${SERVER_CREDS_psw}"
-            }
 
+    stages {
+        stage('Build') {
+            steps {
+                echo "Building the project for branch: ${env.BRANCH_NAME}"
+                // Insert your build steps here
+                // Example: sh 'npm install' or sh 'mvn clean install'
+            }
         }
+
         stage('Test') {
             steps {
-                echo "this is test stage"
+                echo "Running tests for branch: ${env.BRANCH_NAME}"
+                // Insert your test steps here
+                // Example: sh 'npm test' or sh 'mvn test'
             }
+        }
+
+        stage('Conditional Deploy') {
+            parallel {
+                stage('Deploy to Staging') {
+                    when {
+                        branch 'develop'
+                    }
+                    steps {
+                        echo "Deploying to Staging environment for branch: ${env.BRANCH_NAME}"
+                        // Insert staging deployment steps here
+                        // Example: sh './deploy_staging.sh' or sh 'kubectl apply -f staging.yaml'
+                    }
+                }
+
+                stage('Deploy to Production') {
+                    when {
+                        branch 'main'
+                    }
+                    steps {
+                        echo "Deploying to Production environment for branch: ${env.BRANCH_NAME}"
+                        // Insert production deployment steps here
+                        // Example: sh './deploy_production.sh' or sh 'kubectl apply -f production.yaml'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Post-build actions - this runs regardless of success or failure."
+            // Optional: Clean up or send notifications
+        }
+        success {
+            echo "Pipeline completed successfully for branch: ${env.BRANCH_NAME}"
+            // Optional: Send a success notification
+        }
+        failure {
+            echo "Pipeline failed for branch: ${env.BRANCH_NAME}"
+            // Optional: Send a failure notification
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// pipeline {
+//     environment {
+//         DB_IP = '192.168.1.100'        // Replace with your actual DB IP
+//         DB_USER = 'admin'              // Replace with your actual DB user
+//         DB_PASSWORD = 'password123'    // Replace with your actual DB password
+//         SERVER_CREDS = credentials('ec2-user')
+//     }
+//     agent any
+//     stages {
+//         stage('Print DB IP') {
+//             steps {
+//                 echo "Database IP: ${DB_IP}"
+//             }
+//         }
+//         stage('Print DB User and Password') {
+//             steps {
+//                 echo "Database User: ${DB_USER}"
+//                 // Not recommended to directly display passwords in real-world cases!
+//                 echo "Database Password: ${DB_PASSWORD}"
+//             }
+//         }
+//         stage('setup') {
+//             steps {
+//                 echo "My creds : ${SERVER_CREDS}"
+//                 echo "username : ${SERVER_CREDS_usr}"
+//                 echo "password : ${SERVER_CREDS_psw}"
+//             }
+
+//         }
+//         stage('Test') {
+//             steps {
+//                 echo "this is test stage"
+//             }
+//         }
+//     }
+// }
